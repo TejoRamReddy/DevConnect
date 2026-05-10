@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Dashboard | DevConnect</title>
+</head>
+<body>
+    <nav>
+        <a href="/" class="logo">DevConnect 🤝</a>
+        <div class="nav-links"><a href="/logout" style="color:#ef4444; font-weight:bold; text-decoration:none;">Logout</a></div>
+    </nav>
+
+    <div id="flash-container" style="position: sticky; top: 0; z-index: 1000; width: 100%;">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <div class="flash-item" style="background: #38bdf8; color: #0f172a; padding: 12px; text-align: center; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.1); margin-bottom: 2px;">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+    </div>
+
+    <div class="dash-wrapper">
+        <div class="dash-container">
+            <div class="col-left">
+                <div class="card">
+                    <h3>Hello, {{ user }}! 👋</h3>
+                    <p style="color: #94a3b8; font-size: 0.85rem;">Computer Science Student</p>
+                </div>
+                <div class="card">
+                    <h4>Post New Idea 💡</h4>
+                    <form action="/post_project" method="POST">
+                        <input type="text" name="title" placeholder="Project Title" required style="width:100%; padding:10px; margin-bottom:10px; background:#0f172a; border:1px solid #334155; color:white; border-radius:8px;">
+                        <textarea name="description" placeholder="Project Abstract" required style="width:100%; height:100px; padding:10px; background:#0f172a; border:1px solid #334155; color:white; border-radius:8px; margin-bottom:10px; resize:none;"></textarea>
+                        <input type="text" name="skills" placeholder="Skills Required" required style="width:100%; padding:10px; margin-bottom:15px; background:#0f172a; border:1px solid #334155; color:white; border-radius:8px;">
+                        <button type="submit" class="btn-blue" style="width:100%;">Publish Idea</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-main">
+                <h2 style="margin-bottom: 25px;">Project Feed 🚀</h2>
+                {% for p in projects %}
+                <div class="card" style="border-left: 4px solid #38bdf8;">
+                    <div style="display:flex; justify-content:space-between;">
+                        <h3 style="color:#38bdf8;">{{ p.title }}</h3>
+                        <span style="color:#64748b; font-size:0.8rem;">ID: #{{ p.id }}</span>
+                    </div>
+                    <p style="margin:15px 0; color:#cbd5e1;">{{ p.description }}</p>
+                    <p style="font-size:0.85rem; color:#94a3b8; margin-bottom:15px;"><b>Skills:</b> {{ p.skills }}</p>
+
+                    <div style="background:rgba(15, 23, 42, 0.8); padding:15px; border-radius:12px; margin-bottom:15px; border:1px solid #334155;">
+                        <p style="font-size:0.7rem; color:#38bdf8; font-weight:bold; margin-bottom:8px; text-transform:uppercase;">Current Team</p>
+                        <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                            <span style="background:#38bdf8; color:#0f172a; padding:3px 10px; border-radius:15px; font-size:0.75rem; font-weight:bold;">{{ p.owner }} (Lead)</span>
+                            {% for m in all_accepted %}
+                                {% if m.project_id == p.id %}
+                                    <span style="background:#334155; color:white; padding:3px 10px; border-radius:15px; font-size:0.75rem;">{{ m.sender }}</span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #334155; padding-top:15px;">
+                        <span style="font-size:0.9rem;">👤 Posted by: <b>{{ p.owner }}</b></span>
+                        {% if p.owner != user %}
+                            <a href="{{ url_for('join_project', project_id=p.id, owner=p.owner, title=p.title) }}" class="btn-blue">Request to Join</a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="col-right">
+                <div class="card">
+                    <h4>Notifications 🔔</h4>
+                    <p style="font-size:0.75rem; color:#38bdf8; margin:15px 0 10px; border-bottom:1px solid #334155;">Incoming</p>
+                    {% for r in incoming %}
+                    <div style="background:#0f172a; padding:10px; border-radius:8px; margin-bottom:10px; border:1px solid #334155;">
+                        <p style="font-size:0.8rem;"><b>{{ r.sender }}</b></p>
+                        <p style="font-size:0.7rem; color:#94a3b8; margin-bottom:8px;">For: {{ r.project_title }}</p>
+                        {% if r.status == 'Pending' %}
+                        <div style="display:flex; gap:5px;">
+                            <a href="{{ url_for('handle_request', request_id=r.id, action='accept') }}" style="background:#22c55e; color:white; padding:5px; border-radius:4px; flex:1; text-align:center; font-size:0.7rem; text-decoration:none;">Accept</a>
+                            <a href="{{ url_for('handle_request', request_id=r.id, action='reject') }}" style="background:#ef4444; color:white; padding:5px; border-radius:4px; flex:1; text-align:center; font-size:0.7rem; text-decoration:none;">Reject</a>
+                        </div>
+                        {% else %}<p style="font-size:0.75rem; color:#38bdf8;">{{ r.status }}</p>{% endif %}
+                    </div>
+                    {% endfor %}
+
+                    <p style="font-size:0.75rem; color:#38bdf8; margin:20px 0 10px; border-bottom:1px solid #334155;">Your Outgoing Requests</p>
+                    {% for o in outgoing %}
+                    <div style="background:#0f172a; padding:10px; border-radius:8px; margin-bottom:10px; border:1px solid #334155;">
+                        <p style="font-size:0.8rem;">{{ o.project_title }}</p>
+                        <p style="font-size:0.7rem; color:{% if o.status=='Accepted' %}#22c55e{% elif o.status=='Rejected' %}#ef4444{% else %}#38bdf8{% endif %}; font-weight:bold;">● {{ o.status }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer><p>DEVELOPED BY K. TEJO RAM || DEV CONNECT 2026</p></footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const messages = document.querySelectorAll('.flash-item');
+            messages.forEach(function(msg) {
+                setTimeout(function() {
+                    msg.style.transition = "opacity 0.8s ease, transform 0.8s ease";
+                    msg.style.opacity = "0";
+                    setTimeout(() => msg.remove(), 800);
+                }, 4000); 
+            });
+        });
+    </script>
+</body>
+</html>

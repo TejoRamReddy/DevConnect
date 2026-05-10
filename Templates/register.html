@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Account</title>
+</head>
+<body style="margin:0; background:#0b0f1a; color:#e2e8f0; font-family:'Segoe UI',sans-serif; height:100vh; display:flex; align-items:center; justify-content:center;">
+    <div style="background:#161b2c; padding:50px; border-radius:24px; border:1px solid #2d3748; width:100%; max-width:420px; text-align:center; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);">
+        <h2 style="font-size:2.2rem; margin:0 0 10px 0; color:#fff;">Create Account 🚀</h2>
+        <p style="color:#64748b; margin-bottom:35px; font-size:1rem;">Join the developer network</p>
+        
+        {% with messages = get_flashed_messages() %}
+            {% for m in messages %}<p style="color:#f87171; background:rgba(248,113,113,0.1); padding:10px; border-radius:8px; margin-bottom:20px; font-size:0.85rem;">{{m}}</p>{% endfor %}
+        {% endwith %}
+
+        <form action="/register" method="POST">
+            <div style="text-align:left; margin-bottom:15px;">
+                <label style="font-size:0.85rem; color:#94a3b8; display:block; margin-bottom:8px; margin-left:5px;">Username</label>
+                <input type="text" name="username" placeholder="Choose a unique name" required style="width:100%; padding:15px; background:#0f172a; border:1px solid #2d3748; color:#fff; border-radius:12px; box-sizing:border-box; outline:none;">
+            </div>
+            <div style="text-align:left; margin-bottom:25px;">
+                <label style="font-size:0.85rem; color:#94a3b8; display:block; margin-bottom:8px; margin-left:5px;">Password</label>
+                <input type="password" name="password" placeholder="Create a strong password" required style="width:100%; padding:15px; background:#0f172a; border:1px solid #2d3748; color:#fff; border-radius:12px; box-sizing:border-box; outline:none;">
+            </div>
+            <button type="submit" style="width:100%; background:#38bdf8; color:#0b0f1a; padding:16px; border-radius:12px; border:none; font-weight:800; cursor:pointer; font-size:1.1rem; transition:0.3s;">Register Now</button>
+        </form>
+        
+        <p style="margin-top:30px; font-size:0.95rem; color:#94a3b8;">
+            Already a member? <a href="/login" style="color:#38bdf8; text-decoration:none; font-weight:700; border-bottom:1px solid #38bdf8; padding-bottom:2px;">Back to Login</a>
+        </p>
+    </div>
+</body>
+</html>

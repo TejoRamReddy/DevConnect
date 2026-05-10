@@ -1,0 +1,246 @@
+/* --- GLOBAL STYLES --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background: #0f172a;
+    color: #e2e8f0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- NAVIGATION --- */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 8%;
+    background: #111827;
+    border-bottom: 1px solid #1f2937;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #38bdf8;
+    text-decoration: none;
+}
+
+.nav-links a {
+    text-decoration: none;
+    margin-left: 20px;
+}
+
+/* --- BUTTONS --- */
+.btn-blue {
+    background: #38bdf8;
+    color: #0f172a;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.3s;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.btn-blue:hover {
+    background: #7dd3fc;
+    transform: translateY(-2px);
+}
+
+.btn-outline {
+    border: 1px solid #334155;
+    color: #38bdf8;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.3s;
+    margin-left: 10px;
+}
+
+.btn-outline:hover {
+    background: rgba(56, 189, 248, 0.1);
+}
+
+/* --- HOME / HERO SECTION --- */
+.hero-section {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 8%;
+}
+
+.hero-content {
+    max-width: 900px;
+    width: 100%;
+}
+
+.hero-content h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1.1;
+    color: #ffffff;
+    margin-bottom: 20px;
+}
+
+.hero-content p {
+    font-size: 1.25rem;
+    color: #94a3b8;
+    margin-bottom: 40px;
+    max-width: 600px;
+}
+
+.main-btn {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+}
+
+.features-list {
+    display: flex;
+    gap: 40px;
+    margin-top: 60px;
+    flex-wrap: wrap;
+}
+
+.feat {
+    border-left: 2px solid #38bdf8;
+    padding-left: 15px;
+}
+
+.feat b {
+    color: #f8fafc;
+    font-size: 1.1rem;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.feat span {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+/* --- AUTH PAGES (LOGIN/REGISTER) --- */
+.auth-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.auth-card {
+    background: #1e293b;
+    padding: 40px;
+    border-radius: 16px;
+    border: 1px solid #334155;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.auth-card h2 {
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+    color: #f8fafc;
+}
+
+.input-field {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    background: #0f172a;
+    border: 1px solid #334155;
+    color: white;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: #38bdf8;
+}
+
+.auth-btn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    font-size: 1rem;
+}
+
+.auth-footer {
+    margin-top: 25px;
+    font-size: 0.9rem;
+    color: #94a3b8;
+}
+
+.auth-footer a {
+    color: #38bdf8;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.error-msg {
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+    padding: 12px;
+    border: 1px solid #ef4444;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 0.85rem;
+}
+
+/* --- DASHBOARD LAYOUT --- */
+.dash-wrapper {
+    padding: 40px 5%;
+    flex: 1;
+}
+
+.dash-container {
+    display: grid;
+    grid-template-columns: 300px 1fr 300px;
+    gap: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    padding: 24px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+/* --- FOOTER --- */
+footer {
+    background: #111827;
+    text-align: center;
+    padding: 30px;
+    border-top: 1px solid #1f2937;
+    color: #64748b;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 1024px) {
+    .dash-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .hero-content h1 {
+        font-size: 3rem;
+    }
+}
