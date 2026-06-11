@@ -10,11 +10,13 @@ env/
 venv/
 ENV/
 
-# Visual Studio Code settings
+# VS Code settings
+
 .vscode/
 tempCodeRunnerFile.py
 
-# Databases (Crucial to ignore so local data isn't pushed to live PostgreSQL)
+# Databases 
+
 *.db
 users.db
 db.sqlite3
