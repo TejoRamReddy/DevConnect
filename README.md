@@ -1,6 +1,6 @@
 # DevConnect 🤝
 
-DevConnect is a collaborative web platform designed for students and developers to connect, share project ideas, build teams, and collaborate on innovative software projects.
+DevConnect is a collaborative web platform designed for students and developers to connect, share project ideas, build teams, and collaborate on innovative  projects.
 
 ---
 
