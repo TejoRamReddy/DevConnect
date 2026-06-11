@@ -1,119 +1,167 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <title>Dashboard | DevConnect</title>
 </head>
 <body>
+
     <nav>
         <a href="/" class="logo">DevConnect 🤝</a>
-        <div class="nav-links"><a href="/logout" style="color:#ef4444; font-weight:bold; text-decoration:none;">Logout</a></div>
+        <a href="/logout" style="color:#f87171; text-decoration:none; font-weight:700;">Logout</a>
     </nav>
 
-    <div id="flash-container" style="position: sticky; top: 0; z-index: 1000; width: 100%;">
-        {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            {% for message in messages %}
-              <div class="flash-item" style="background: #38bdf8; color: #0f172a; padding: 12px; text-align: center; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.1); margin-bottom: 2px;">
-                {{ message }}
-              </div>
-            {% endfor %}
-          {% endif %}
-        {% endwith %}
-    </div>
+    <div class="dash-layout">
 
-    <div class="dash-wrapper">
-        <div class="dash-container">
-            <div class="col-left">
-                <div class="card">
-                    <h3>Hello, {{ user }}! 👋</h3>
-                    <p style="color: #94a3b8; font-size: 0.85rem;">Computer Science Student</p>
-                </div>
-                <div class="card">
-                    <h4>Post New Idea 💡</h4>
+        <!-- ── LEFT COLUMN-->
+        <div>
+
+            <!-- User info -->
+
+            <div class="panel">
+                <h3>Hello, {{ user }}! 👋</h3>
+                <p style="color:#64748b; font-size:0.85rem; margin-top:4px;">Computer Science Student</p>
+            </div>
+
+            <!-- Post new idea -->
+
+            <div class="panel">
+                <h4>Post New Idea 💡</h4>
+                <div style="margin-top:20px;">
                     <form action="/post_project" method="POST">
-                        <input type="text" name="title" placeholder="Project Title" required style="width:100%; padding:10px; margin-bottom:10px; background:#0f172a; border:1px solid #334155; color:white; border-radius:8px;">
-                        <textarea name="description" placeholder="Project Abstract" required style="width:100%; height:100px; padding:10px; background:#0f172a; border:1px solid #334155; color:white; border-radius:8px; margin-bottom:10px; resize:none;"></textarea>
-                        <input type="text" name="skills" placeholder="Skills Required" required style="width:100%; padding:10px; margin-bottom:15px; background:#0f172a; border:1px solid #334155; color:white; border-radius:8px;">
-                        <button type="submit" class="btn-blue" style="width:100%;">Publish Idea</button>
+                        <input  type="text"     name="title"       placeholder="Project Title"    required class="input-box">
+                        <textarea               name="description" placeholder="Project Abstract" required class="input-box" style="height:100px; resize:vertical;"></textarea>
+                        <input  type="text"     name="skills"      placeholder="Skills Needed (e.g. Python, React)" required class="input-box">
+                        <button type="submit" class="btn-main" style="width:100%;">Publish to Feed</button>
                     </form>
                 </div>
             </div>
 
-            <div class="col-main">
-                <h2 style="margin-bottom: 25px;">Project Feed 🚀</h2>
-                {% for p in projects %}
-                <div class="card" style="border-left: 4px solid #38bdf8;">
-                    <div style="display:flex; justify-content:space-between;">
-                        <h3 style="color:#38bdf8;">{{ p.title }}</h3>
-                        <span style="color:#64748b; font-size:0.8rem;">ID: #{{ p.id }}</span>
-                    </div>
-                    <p style="margin:15px 0; color:#cbd5e1;">{{ p.description }}</p>
-                    <p style="font-size:0.85rem; color:#94a3b8; margin-bottom:15px;"><b>Skills:</b> {{ p.skills }}</p>
+            <!-- My request status -->
 
-                    <div style="background:rgba(15, 23, 42, 0.8); padding:15px; border-radius:12px; margin-bottom:15px; border:1px solid #334155;">
-                        <p style="font-size:0.7rem; color:#38bdf8; font-weight:bold; margin-bottom:8px; text-transform:uppercase;">Current Team</p>
-                        <div style="display:flex; flex-wrap:wrap; gap:8px;">
-                            <span style="background:#38bdf8; color:#0f172a; padding:3px 10px; border-radius:15px; font-size:0.75rem; font-weight:bold;">{{ p.owner }} (Lead)</span>
-                            {% for m in all_accepted %}
-                                {% if m.project_id == p.id %}
-                                    <span style="background:#334155; color:white; padding:3px 10px; border-radius:15px; font-size:0.75rem;">{{ m.sender }}</span>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    </div>
-
-                    <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #334155; padding-top:15px;">
-                        <span style="font-size:0.9rem;">👤 Posted by: <b>{{ p.owner }}</b></span>
-                        {% if p.owner != user %}
-                            <a href="{{ url_for('join_project', project_id=p.id, owner=p.owner, title=p.title) }}" class="btn-blue">Request to Join</a>
-                        {% endif %}
-                    </div>
+            {% if my_requests %}
+            <div class="panel">
+                <h4>My Requests 📋</h4>
+                {% for r in my_requests %}
+                <div class="notif-item" style="margin-top:12px;">
+                    <p style="margin-bottom:6px;">
+                        <b style="color:#e2e8f0;">{{ r.project_title }}</b>
+                    </p>
+                    {% if r.status == 'Pending' %}
+                        <span class="badge badge-pending">⏳ Pending</span>
+                    {% elif r.status == 'Accepted' %}
+                        <span class="badge badge-accepted">✅ Accepted</span>
+                    {% else %}
+                        <span class="badge badge-declined">❌ Declined</span>
+                    {% endif %}
                 </div>
                 {% endfor %}
             </div>
+            {% endif %}
 
-            <div class="col-right">
-                <div class="card">
-                    <h4>Notifications 🔔</h4>
-                    <p style="font-size:0.75rem; color:#38bdf8; margin:15px 0 10px; border-bottom:1px solid #334155;">Incoming</p>
-                    {% for r in incoming %}
-                    <div style="background:#0f172a; padding:10px; border-radius:8px; margin-bottom:10px; border:1px solid #334155;">
-                        <p style="font-size:0.8rem;"><b>{{ r.sender }}</b></p>
-                        <p style="font-size:0.7rem; color:#94a3b8; margin-bottom:8px;">For: {{ r.project_title }}</p>
-                        {% if r.status == 'Pending' %}
-                        <div style="display:flex; gap:5px;">
-                            <a href="{{ url_for('handle_request', request_id=r.id, action='accept') }}" style="background:#22c55e; color:white; padding:5px; border-radius:4px; flex:1; text-align:center; font-size:0.7rem; text-decoration:none;">Accept</a>
-                            <a href="{{ url_for('handle_request', request_id=r.id, action='reject') }}" style="background:#ef4444; color:white; padding:5px; border-radius:4px; flex:1; text-align:center; font-size:0.7rem; text-decoration:none;">Reject</a>
-                        </div>
-                        {% else %}<p style="font-size:0.75rem; color:#38bdf8;">{{ r.status }}</p>{% endif %}
-                    </div>
-                    {% endfor %}
+        </div>
 
-                    <p style="font-size:0.75rem; color:#38bdf8; margin:20px 0 10px; border-bottom:1px solid #334155;">Your Outgoing Requests</p>
-                    {% for o in outgoing %}
-                    <div style="background:#0f172a; padding:10px; border-radius:8px; margin-bottom:10px; border:1px solid #334155;">
-                        <p style="font-size:0.8rem;">{{ o.project_title }}</p>
-                        <p style="font-size:0.7rem; color:{% if o.status=='Accepted' %}#22c55e{% elif o.status=='Rejected' %}#ef4444{% else %}#38bdf8{% endif %}; font-weight:bold;">● {{ o.status }}</p>
-                    </div>
-                    {% endfor %}
+        <!-- ── MIDDLE COLUMN — Project Feed  -->
+        <div>
+            <h2 style="margin-bottom:25px;">Project Feed 🚀</h2>
+
+            {% for p in projects %}
+            <div class="panel">
+
+                <!-- Title + ID -->
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <h3 style="color:#38bdf8; font-size:1.3rem;">{{ p.title }}</h3>
+                    <span style="font-size:0.75rem; color:#4a5568;">#{{ p.id }}</span>
                 </div>
+
+                <!-- Description -->
+                <p style="margin:10px 0 14px; line-height:1.7; color:#cbd5e1; font-size:0.95rem;">
+                    {{ p.description }}
+                </p>
+
+                <!-- Skills -->
+                <p style="font-size:0.85rem; color:#94a3b8; margin-bottom:16px;">
+                    <b>Skills Needed:</b> {{ p.skills }}
+                </p>
+
+                <!-- Active team -->
+                <div style="background:#0f172a; padding:15px; border-radius:12px; margin-bottom:16px;">
+                    <p style="font-size:0.7rem; color:#38bdf8; font-weight:800; margin-bottom:10px; letter-spacing:0.05em;">
+                        ACTIVE TEAM
+                    </p>
+                    <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+                        <span style="background:#38bdf8; color:#0b0f1a; padding:4px 12px; border-radius:6px; font-size:0.75rem; font-weight:700;">
+                            {{ p.owner }} (Owner)
+                        </span>
+                        {% for a in all_accepted %}
+                            {% if a.project_id == p.id %}
+                            <span style="background:#1e293b; color:#94a3b8; padding:4px 12px; border-radius:6px; font-size:0.75rem;">
+                                {{ a.sender }}
+                            </span>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                    {% if p.owner != user %}
+                        <a href="{{ url_for('join_project', pid=p.id, owner=p.owner, title=p.title) }}" class="btn-main" style="font-size:0.85rem;">
+                            Request to Join
+                        </a>
+                    {% else %}
+                        <form action="{{ url_for('delete_project', pid=p.id) }}" method="POST" onsubmit="return confirm('Delete this project?');">
+                            <button type="submit" class="btn-danger">Delete Project</button>
+                        </form>
+                    {% endif %}
+                </div>
+
+            </div>
+            {% else %}
+            <div class="panel" style="text-align:center; color:#64748b; padding:50px 25px;">
+                <p style="font-size:2rem; margin-bottom:12px;">💡</p>
+                <p>No projects yet. Be the first to post an idea!</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- ── RIGHT COLUMN — Notifications  -->
+        <div>
+            <div class="panel">
+                <h4>Notifications 🔔</h4>
+
+                {% if incoming %}
+                    {% for r in incoming %}
+                    <div class="notif-item">
+                        <p>
+                            <b style="color:#38bdf8;">{{ r.sender }}</b>
+                            wants to join
+                            <b>{{ r.project_title }}</b>
+                        </p>
+                        <div class="notif-actions">
+                            <a href="{{ url_for('handle_request', rid=r.id, action='accept') }}" class="btn-main" style="font-size:0.78rem; padding:7px 14px;">
+                                ✅ Accept
+                            </a>
+                            <a href="{{ url_for('handle_request', rid=r.id, action='decline') }}" class="btn-danger" style="font-size:0.78rem; padding:7px 14px;">
+                                ❌ Decline
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p style="color:#4b5563; font-size:0.85rem; margin-top:16px;">
+                        No pending requests.
+                    </p>
+                {% endif %}
+
             </div>
         </div>
-    </div>
-    <footer><p>DEVELOPED BY K. TEJO RAM || DEV CONNECT 2026</p></footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const messages = document.querySelectorAll('.flash-item');
-            messages.forEach(function(msg) {
-                setTimeout(function() {
-                    msg.style.transition = "opacity 0.8s ease, transform 0.8s ease";
-                    msg.style.opacity = "0";
-                    setTimeout(() => msg.remove(), 800);
-                }, 4000); 
-            });
-        });
-    </script>
+    </div>
+
+    <footer>DEVELOPED BY K. TEJO RAM &nbsp;|&nbsp; DEV CONNECT 2026</footer>
+
 </body>
 </html>

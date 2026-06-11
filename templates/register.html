@@ -2,31 +2,138 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Create Account</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - DevConnect</title>
+    <style>
+        body {
+            margin: 0;
+            background: #0b0f1a;
+            color: #e2e8f0;
+            font-family: 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .card {
+            background: #161b2c;
+            padding: 50px;
+            border-radius: 24px;
+            border: 1px solid #2d3748;
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+        }
+        h2 {
+            font-size: 2.2rem;
+            margin: 0 0 10px 0;
+            color: #fff;
+        }
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 35px;
+            font-size: 1rem;
+        }
+        .flash-error {
+            color: #f87171;
+            background: rgba(248,113,113,0.1);
+            border: 1px solid rgba(248,113,113,0.3);
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        .form-group {
+            text-align: left;
+            margin-bottom: 18px;
+        }
+        label {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            display: block;
+            margin-bottom: 8px;
+            margin-left: 4px;
+        }
+        input {
+            width: 100%;
+            padding: 15px;
+            background: #0f172a;
+            border: 1px solid #2d3748;
+            color: #fff;
+            border-radius: 12px;
+            box-sizing: border-box;
+            outline: none;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        input:focus { border-color: #38bdf8; }
+        input::placeholder { color: #475569; }
+        .hint {
+            font-size: 0.75rem;
+            color: #4b5563;
+            margin-top: 5px;
+            margin-left: 4px;
+        }
+        button {
+            width: 100%;
+            background: #38bdf8;
+            color: #0b0f1a;
+            padding: 16px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 800;
+            cursor: pointer;
+            font-size: 1.05rem;
+            margin-top: 8px;
+            transition: background 0.2s, transform 0.2s;
+        }
+        button:hover {
+            background: #0ea5e9;
+            transform: translateY(-2px);
+        }
+        .footer-text {
+            margin-top: 28px;
+            font-size: 0.95rem;
+            color: #94a3b8;
+        }
+        .footer-text a {
+            color: #38bdf8;
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .footer-text a:hover { text-decoration: underline; }
+    </style>
 </head>
-<body style="margin:0; background:#0b0f1a; color:#e2e8f0; font-family:'Segoe UI',sans-serif; height:100vh; display:flex; align-items:center; justify-content:center;">
-    <div style="background:#161b2c; padding:50px; border-radius:24px; border:1px solid #2d3748; width:100%; max-width:420px; text-align:center; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);">
-        <h2 style="font-size:2.2rem; margin:0 0 10px 0; color:#fff;">Create Account 🚀</h2>
-        <p style="color:#64748b; margin-bottom:35px; font-size:1rem;">Join the developer network</p>
-        
+<body>
+    <div class="card">
+        <h2>Create Account 🚀</h2>
+        <p class="subtitle">Join the developer network</p>
+
         {% with messages = get_flashed_messages() %}
-            {% for m in messages %}<p style="color:#f87171; background:rgba(248,113,113,0.1); padding:10px; border-radius:8px; margin-bottom:20px; font-size:0.85rem;">{{m}}</p>{% endfor %}
+            {% for m in messages %}
+                <div class="flash-error">⚠️ {{ m }}</div>
+            {% endfor %}
         {% endwith %}
 
         <form action="/register" method="POST">
-            <div style="text-align:left; margin-bottom:15px;">
-                <label style="font-size:0.85rem; color:#94a3b8; display:block; margin-bottom:8px; margin-left:5px;">Username</label>
-                <input type="text" name="username" placeholder="Choose a unique name" required style="width:100%; padding:15px; background:#0f172a; border:1px solid #2d3748; color:#fff; border-radius:12px; box-sizing:border-box; outline:none;">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" name="username" placeholder="Choose a unique name" minlength="3" maxlength="80" required>
+                <p class="hint">3–80 characters</p>
             </div>
-            <div style="text-align:left; margin-bottom:25px;">
-                <label style="font-size:0.85rem; color:#94a3b8; display:block; margin-bottom:8px; margin-left:5px;">Password</label>
-                <input type="password" name="password" placeholder="Create a strong password" required style="width:100%; padding:15px; background:#0f172a; border:1px solid #2d3748; color:#fff; border-radius:12px; box-sizing:border-box; outline:none;">
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="Create a strong password" minlength="6" required>
+                <p class="hint">Minimum 6 characters</p>
             </div>
-            <button type="submit" style="width:100%; background:#38bdf8; color:#0b0f1a; padding:16px; border-radius:12px; border:none; font-weight:800; cursor:pointer; font-size:1.1rem; transition:0.3s;">Register Now</button>
+            <button type="submit">Register Now</button>
         </form>
-        
-        <p style="margin-top:30px; font-size:0.95rem; color:#94a3b8;">
-            Already a member? <a href="/login" style="color:#38bdf8; text-decoration:none; font-weight:700; border-bottom:1px solid #38bdf8; padding-bottom:2px;">Back to Login</a>
+
+        <p class="footer-text">
+            Already a member? <a href="/login">Back to Login</a>
         </p>
     </div>
 </body>
